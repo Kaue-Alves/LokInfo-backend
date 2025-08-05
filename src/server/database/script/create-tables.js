@@ -5,9 +5,10 @@ createTables();
 
 export async function createTables() {
     await resetDatabase();
-    
+
     await createTableUsuarios();
     await createTableJogos();
+    await createTableRegistros();
 }
 
 async function createTableUsuarios() {
@@ -20,9 +21,9 @@ async function createTableUsuarios() {
                 cpf TEXT NOT NULL,
                 dataNasc DATE NOT NULL
             );`;
-        console.log("Tabela de usuarios criada.");
+        console.log("👤 Tabela de usuarios criada.");
     } catch (error) {
-        console.error("Erro ao criar tabela usuarios:", error);
+        console.error("❌ Erro ao criar tabela usuarios:", error);
     }
 }
 
@@ -33,10 +34,26 @@ async function createTableJogos() {
                 id SERIAL PRIMARY KEY,
                 titulo TEXT NOT NULL UNIQUE,
                 categoria TEXT NOT NULL,
-                classificacao INTEGER NOT NULL
+                classificacao INTEGER NOT NULL,
+                locado BOOLEAN NOT NULL
             );`;
-        console.log("Tabela de jogos criada.");
+        console.log("🎮 Tabela de jogos criada.");
     } catch (error) {
-        console.error("Erro ao criar tabela jogos:", error);
+        console.error("❌ Erro ao criar tabela jogos:", error);
+    }
+}
+
+async function createTableRegistros() {
+    try {
+        await sql`
+            CREATE TABLE registros (
+                id SERIAL PRIMARY KEY,
+                id_usuario INTEGER NOT NULL REFERENCES usuarios(id),
+                id_jogo INTEGER NOT NULL REFERENCES jogos(id),
+                data_registro DATE NOT NULL
+            );`;
+        console.log("📋 Tabela de registros criada.");
+    } catch (error) {
+        console.error("❌ Erro ao criar tabela registros:", error);
     }
 }

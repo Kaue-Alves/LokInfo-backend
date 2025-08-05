@@ -4,8 +4,8 @@ export async function resetDatabase() {
     console.log("🔄 Resetando banco de dados...");
 
     await deleteTableRegistros();
-    await deleteTableJogos();
-    await deleteTableUsuarios();
+    await deleteTableFornecedores();
+    await deleteTableProdutos();
 
     console.log("✅ Reset completo!");
 }
@@ -19,20 +19,20 @@ async function deleteTableRegistros() {
     }
 }
 
-async function deleteTableUsuarios() {
+async function deleteTableProdutos() {
     try {
-        await sql`DROP TABLE IF EXISTS usuarios CASCADE;`;
-        console.log("👤 Tabela de usuarios deletada.");
+        await sql`DROP TABLE IF EXISTS produtos CASCADE;`;
+        console.log("👤 Tabela de produtos deletada.");
     } catch (error) {
-        console.error("❌ Erro ao deletar tabela usuarios:", error);
+        console.error("❌ Erro ao deletar tabela produtos:", error);
     }
 }
 
-async function deleteTableJogos() {
+async function deleteTableFornecedores() {
     try {
-        await sql`DROP TABLE IF EXISTS jogos CASCADE;`;
-        console.log("🎮 Tabela de jogos deletada.");
+        await sql`DROP TABLE IF EXISTS fornecedores CASCADE;`;
+        console.log("🎮 Tabela de fornecedores deletada.");
     } catch (error) {
-        console.error("❌ Erro ao deletar tabela jogos:", error);
+        console.error("❌ Erro ao deletar tabela fornecedores:", error);
     }
 }

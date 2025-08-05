@@ -5,8 +5,7 @@ const { PORT } = process.env
 const app = fastify()
 
 app.get("/", () => {
-    console.log("Server funcionando");
-    
+    console.log("Acessou rota principal");
 })
 
 app.listen({

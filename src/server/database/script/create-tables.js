@@ -6,40 +6,40 @@ createTables();
 export async function createTables() {
     await resetDatabase();
 
-    await createTableUsuarios();
-    await createTableJogos();
+    await createTableFornecedores();
+    await createTableProdutos();
     await createTableRegistros();
 }
 
-async function createTableUsuarios() {
+async function createTableProdutos() {
     try {
         await sql`
-            CREATE TABLE usuarios (
+            CREATE TABLE produtos (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL,
-                email TEXT NOT NULL,
-                cpf TEXT NOT NULL,
-                dataNasc DATE NOT NULL
+                preco_unitario DECIMAL(10, 2) NOT NULL,
+                quantidade_estoque INTEGER NOT NULL,
+                id_fornecedor INTEGER NOT NULL REFERENCES fornecedores(id)
             );`;
-        console.log("👤 Tabela de usuarios criada.");
+        console.log("� Tabela de produtos criada.");
     } catch (error) {
-        console.error("❌ Erro ao criar tabela usuarios:", error);
+        console.error("❌ Erro ao criar tabela produtos:", error);
     }
 }
 
-async function createTableJogos() {
+async function createTableFornecedores() {
     try {
         await sql`
-            CREATE TABLE jogos (
+            CREATE TABLE fornecedores (
                 id SERIAL PRIMARY KEY,
-                titulo TEXT NOT NULL UNIQUE,
-                categoria TEXT NOT NULL,
-                classificacao INTEGER NOT NULL,
-                locado BOOLEAN NOT NULL
+                nome TEXT NOT NULL,
+                cnpj TEXT NOT NULL UNIQUE,
+                telefone TEXT NOT NULL,
+                email TEXT NOT NULL
             );`;
-        console.log("🎮 Tabela de jogos criada.");
+        console.log("� Tabela de fornecedores criada.");
     } catch (error) {
-        console.error("❌ Erro ao criar tabela jogos:", error);
+        console.error("❌ Erro ao criar tabela fornecedores:", error);
     }
 }
 
@@ -48,8 +48,8 @@ async function createTableRegistros() {
         await sql`
             CREATE TABLE registros (
                 id SERIAL PRIMARY KEY,
-                id_usuario INTEGER NOT NULL REFERENCES usuarios(id),
-                id_jogo INTEGER NOT NULL REFERENCES jogos(id),
+                id_produtos INTEGER NOT NULL REFERENCES produtos(id),
+                id_fornecedores INTEGER NOT NULL REFERENCES fornecedores(id),
                 data_registro DATE NOT NULL
             );`;
         console.log("📋 Tabela de registros criada.");

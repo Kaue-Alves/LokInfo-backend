@@ -17,8 +17,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch ./src/server/index.js",
-    "create-tables": "node ./src/server/database/script/create-tables.js",
-    "reset-tables": "node ./src/server/database/script/reset-tables.js"
+    "reset-database": "node ./src/server/database/script/create-tables.js"
   },
   "dependencies": {
     "dotenv": "^17.2.1",

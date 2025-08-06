@@ -1,0 +1,28 @@
+{
+  "name": "lokigames-backend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Kaue-Alves/LokiGames-backend#readme",
+  "bugs": {
+    "url": "https://github.com/Kaue-Alves/LokiGames-backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kaue-Alves/LokiGames-backend.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch ./src/server/index.js",
+    "reset-database": "node ./src/server/database/script/create-tables.js",
+    "create-procedures": "node ./src/server/database/procedures/create-procedures.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "fastify": "^5.4.0",
+    "postgres": "^3.4.7"
+  }
+}

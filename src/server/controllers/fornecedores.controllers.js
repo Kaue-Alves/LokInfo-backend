@@ -1,8 +1,8 @@
-import { Fornecedores} from "../database/fornecedores/fornecedores.js";
+import { Fornecedores } from "../database/fornecedores/fornecedores.js";
 
 const fornecedores = new Fornecedores();
 
-export async function adicionarUsuario(usuario) {
+export async function adicionarFornecedor(usuario) {
     try {
         // ✅ Validação inicial
         if (!usuario || typeof usuario !== "object") {

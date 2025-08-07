@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { fastify } from "fastify"
-import { adicionarUsuario } from './controllers/usuarios.controllers.js'
+import { adicionarFornecedor } from './controllers/fornecedores.controllers.js'
 
 const { PORT } = process.env
 const app = fastify()
@@ -14,7 +14,7 @@ app.post("/usuario", async (request, reply) => {
     const usuario = request.body
     console.log(usuario);
     
-    await adicionarUsuario(usuario)
+    await adicionarFornecedor(usuario)
 })
 
 app.listen({

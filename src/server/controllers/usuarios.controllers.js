@@ -1,6 +1,6 @@
-import { Usuarios } from "../database/usuarios/usuarios.js";
+import { Fornecedores} from "../database/fornecedores/fornecedores.js";
 
-const usuariosDB = new Usuarios();
+const fornecedores = new Fornecedores();
 
 export async function adicionarUsuario(usuario) {
     try {
@@ -31,7 +31,7 @@ export async function adicionarUsuario(usuario) {
         validarDados(dadosPreparados);
 
         // ✅ Chamar método de criação
-        await usuariosDB.create(
+        await fornecedores.create(
             dadosPreparados.nome,
             dadosPreparados.cnpj,
             dadosPreparados.telefone,
@@ -51,7 +51,7 @@ export async function adicionarUsuario(usuario) {
 
 // export async function buscarUsuarios() {
 //     try {
-//         const usuarios = await usuariosDB.get();
+//         const usuarios = await Fornecedores.get();
 //         return {
 //             success: true,
 //             data: usuarios || [],
@@ -80,7 +80,7 @@ export async function adicionarUsuario(usuario) {
 //         validarDados(dadosPreparados);
 
 //         // ✅ Chamar método de atualização
-//         await usuariosDB.update(
+//         await Fornecedores.update(
 //             parseInt(id),
 //             dadosPreparados.nome,
 //             dadosPreparados.cnpj,
@@ -107,7 +107,7 @@ export async function adicionarUsuario(usuario) {
 //         }
 
 //         // ✅ Chamar método de remoção
-//         await usuariosDB.delete(parseInt(id));
+//         await Fornecedores.delete(parseInt(id));
 
 //         return {
 //             success: true,

@@ -18,7 +18,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch ./src/server/index.js",
     "reset-database": "node ./src/server/database/script/create-tables.js",
-    "create-procedures": "node ./src/server/database/procedures/create-procedures.js"
+    "create-procedures": "node ./src/server/database/procedures/create-procedures.js",
+    "create-functions": "node ./src/server/database/functions/create-functions.js",
+    "create-triggers": "node ./src/server/database/triggers/create-triggers.js"
   },
   "dependencies": {
     "dotenv": "^17.2.1",

@@ -14,7 +14,7 @@ async function createTableProdutos() {
         await sql`
             CREATE TABLE produtos (
                 id SERIAL PRIMARY KEY,
-                nome TEXT NOT NULL UNIQUE,
+                nome TEXT NOT NULL,
                 preco_unitario DECIMAL(10, 2) NOT NULL,
                 quantidade_estoque INTEGER NOT NULL,
                 id_fornecedor INTEGER NOT NULL REFERENCES fornecedores(id)
@@ -48,7 +48,8 @@ async function createTableRegistros() {
                 id SERIAL PRIMARY KEY,
                 id_produtos INTEGER NOT NULL REFERENCES produtos(id),
                 id_fornecedores INTEGER NOT NULL REFERENCES fornecedores(id),
-                data_registro TIMESTAMP NOT NULL
+                data_registro TIMESTAMP NOT NULL,
+                quantidade INTEGER NOT NULL
             );`;
         console.log("📋 Tabela de registros criada.");
     } catch (error) {

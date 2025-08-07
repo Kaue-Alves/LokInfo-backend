@@ -5,7 +5,7 @@ import { adicionarUsuario } from './controllers/usuarios.controllers.js'
 const { PORT } = process.env
 const app = fastify()
 
-app.get("/", () => {
+app.get("/usuario", () => {
     // usuariosDB.create()
 })
 

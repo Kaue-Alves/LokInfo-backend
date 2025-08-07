@@ -82,15 +82,40 @@ async function createProcedureRemoverFornecedor() {
             CREATE OR REPLACE PROCEDURE remover_fornecedor(p_id INT)
             LANGUAGE plpgsql
             AS $$
+            DECLARE
+                v_total_produtos INTEGER;
+                v_total_registros INTEGER;
             BEGIN
+                -- Contar produtos e registros relacionados ao fornecedor
+                SELECT COUNT(*) INTO v_total_produtos FROM produtos WHERE id_fornecedor = p_id;
+                SELECT COUNT(*) INTO v_total_registros FROM registros WHERE id_fornecedores = p_id;
+
+                RAISE NOTICE 'Iniciando remoção do fornecedor ID %. Produtos: %, Registros: %', 
+                            p_id, v_total_produtos, v_total_registros;
+
+                -- 1. Primeiro, remover todos os registros relacionados aos produtos deste fornecedor
+                DELETE FROM registros 
+                WHERE id_fornecedores = p_id;
+
+                RAISE NOTICE 'Removidos % registros do fornecedor ID %', v_total_registros, p_id;
+
+                -- 2. Depois, remover todos os produtos deste fornecedor
+                DELETE FROM produtos 
+                WHERE id_fornecedor = p_id;
+
+                RAISE NOTICE 'Removidos % produtos do fornecedor ID %', v_total_produtos, p_id;
+
+                -- 3. Finalmente, remover o fornecedor
                 DELETE FROM fornecedores
                 WHERE id = p_id;
 
-                RAISE NOTICE 'Fornecedor com ID % removido com sucesso.', p_id;
+                RAISE NOTICE 'Fornecedor com ID % removido com sucesso (em cascata).', p_id;
             END;
             $$;
         `;
-        console.log("🔧 Procedure 'remover_fornecedor' criada com sucesso!");
+        console.log(
+            "🔧 Procedure 'remover_fornecedor' criada com remoção em cascata!"
+        );
     } catch (error) {
         console.error("❌ Erro ao criar procedure remover_fornecedor:", error);
     }
@@ -194,8 +219,6 @@ async function createProcedureRemoverProduto() {
 
 async function createProcedureSaidaProduto() {
     try {
-        
-
         await sql`
             CREATE OR REPLACE PROCEDURE saida_produto(
                 p_id_produto INTEGER,

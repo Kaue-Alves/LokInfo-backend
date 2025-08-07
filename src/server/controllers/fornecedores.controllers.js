@@ -49,6 +49,76 @@ export async function adicionarFornecedor(usuario) {
     }
 }
 
+export async function listarFornecedores() { 
+    try {
+        const fornecedoresList = await fornecedores.get();
+        return {
+            success: true,
+            data: fornecedoresList || [],
+            total: fornecedoresList?.length || 0,
+        };
+    } catch (error) {
+        console.error("❌ Erro no controller listarFornecedores:", error.message);
+        throw error;
+    }
+}
+
+export async function atualizarFornecedor(id, fornecedor) {
+    try {
+        // ✅ Validar ID
+        if (!id || isNaN(parseInt(id))) {
+            throw new Error("ID inválido fornecido");
+        }
+
+        // ✅ Validar dados do fornecedor
+        if (!fornecedor || typeof fornecedor !== "object") {
+            throw new Error("Dados do fornecedor não fornecidos ou inválidos");
+        }
+
+        const { nome, cnpj, telefone, email } = fornecedor;
+        const dadosPreparados = prepararDados({ nome, cnpj, telefone, email });
+        validarDados(dadosPreparados);
+
+        // ✅ Chamar método de atualização
+        await fornecedores.update(
+            parseInt(id),
+            dadosPreparados.nome,
+            dadosPreparados.cnpj,
+            dadosPreparados.telefone,
+            dadosPreparados.email
+        );
+
+        return {
+            success: true,
+            message: "Fornecedor atualizado com sucesso!",
+            data: { id: parseInt(id), ...dadosPreparados },
+        };
+    } catch (error) {
+        console.error("❌ Erro no controller atualizarFornecedor:", error.message);
+        throw error;
+    }
+}
+
+export async function removerFornecedor(id) { 
+    try {
+        // ✅ Validar ID
+        if (!id || isNaN(parseInt(id))) {
+            throw new Error("ID inválido fornecido");
+        }
+
+        // ✅ Chamar método de remoção
+        await fornecedores.delete(parseInt(id));
+
+        return {
+            success: true,
+            message: "Fornecedor removido com sucesso!",
+            data: { id: parseInt(id) },
+        };
+    } catch (error) {
+        console.error("❌ Erro no controller removerFornecedor:", error.message);
+        throw error;
+    }
+}
 // export async function buscarUsuarios() {
 //     try {
 //         const usuarios = await Fornecedores.get();

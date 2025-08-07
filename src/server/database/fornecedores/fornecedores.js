@@ -11,13 +11,13 @@ export class Fornecedores {
     }
 
     async get() {
-        // try {
-        //     const result = await sql`SELECT * FROM fornecedores`;
-        //     console.log("📋 Fornecedores encontrados:", result);
-        //     return result;
-        // } catch (error) {
-        //     console.error("❌ Erro ao buscar fornecedores:", error);
-        // }
+        try {
+            const result = await sql`SELECT * FROM listar_fornecedores()`;
+            console.log("📋 Fornecedores encontrados:", result.length);
+            return result;
+        } catch (error) {
+            console.error("❌ Erro ao buscar fornecedores:", error);
+        }
     }
 
     async update(id, nome, cnpj, telefone, email) {

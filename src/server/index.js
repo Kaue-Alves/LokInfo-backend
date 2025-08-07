@@ -11,10 +11,10 @@ app.get("/fornecedor", () => {
 
 app.post("/fornecedor/adicionar", async (request, reply) => {
 
-    const usuario = request.body
-    console.log(usuario);
+    const fornecedor = request.body
     
-    await adicionarFornecedor(usuario)
+    await adicionarFornecedor(fornecedor)
+    return reply.status(201).send({message: "Fornecedor adicionado com sucesso!"})
 })
 
 app.listen({

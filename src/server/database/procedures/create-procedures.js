@@ -8,6 +8,7 @@ export async function createProcedures() {
     await createProcedureAdicionarProduto();
     await createProcedureAtualizarProduto();
     await createProcedureRemoverProduto();
+    await createProcedureSaidaProduto();
 
     console.log("✅ Todas as procedures foram criadas!");
 }
@@ -191,32 +192,59 @@ async function createProcedureRemoverProduto() {
     }
 }
 
-// ========== REGISTROS ==========
-// deve ser um trigger
-// async function createProcedureAdicionarRegistro() {
-//     try {
-//         await sql`
-//             CREATE OR REPLACE PROCEDURE adicionar_registro(
-//                 p_id_produtos INTEGER,
-//                 p_id_fornecedores INTEGER,
-//                 p_data_registro TIMESTAMP
-//             )
-//             LANGUAGE plpgsql
-//             AS $$
-//             BEGIN
-//                 INSERT INTO registros (id_produtos, id_fornecedores, data_registro)
-//                 VALUES (p_id_produtos, p_id_fornecedores, p_data_registro);
+async function createProcedureSaidaProduto() {
+    try {
+        
 
-//                 RAISE NOTICE 'Registro adicionado com sucesso.';
-//             END;
-//             $$;
-//         `;
-//         console.log("🔧 Procedure 'adicionar_registro' criada com sucesso!");
-//     } catch (error) {
-//         console.error("❌ Erro ao criar procedure adicionar_registro:", error);
-//     }
-// }
+        await sql`
+            CREATE OR REPLACE PROCEDURE saida_produto(
+                p_id_produto INTEGER,
+                p_quantidade_saida INTEGER
+            )
+            LANGUAGE plpgsql
+            AS $$
+            DECLARE
+                v_quantidade_atual INTEGER;
+                v_nome_produto TEXT;
+                v_id_fornecedor INTEGER;
+            BEGIN
+                -- Buscar informações do produto
+                SELECT quantidade_estoque, nome, id_fornecedor
+                INTO v_quantidade_atual, v_nome_produto, v_id_fornecedor
+                FROM produtos
+                WHERE id = p_id_produto;
+
+                -- Verificar se o produto existe
+                IF v_quantidade_atual IS NULL THEN
+                    RAISE EXCEPTION 'Produto com ID % não encontrado.', p_id_produto;
+                END IF;
+
+                -- Verificar se há quantidade suficiente em estoque
+                IF v_quantidade_atual < p_quantidade_saida THEN
+                    RAISE EXCEPTION 'Quantidade insuficiente em estoque. Disponível: %, Solicitado: %', 
+                                    v_quantidade_atual, p_quantidade_saida;
+                END IF;
+
+                -- Verificar se a quantidade de saída é válida
+                IF p_quantidade_saida <= 0 THEN
+                    RAISE EXCEPTION 'A quantidade de saída deve ser maior que zero.';
+                END IF;
+
+                -- Atualizar o estoque do produto
+                UPDATE produtos
+                SET quantidade_estoque = quantidade_estoque - p_quantidade_saida
+                WHERE id = p_id_produto;
+
+                RAISE NOTICE 'Saída registrada: Produto % (ID: %) - Quantidade retirada: % - Estoque restante: %', 
+                            v_nome_produto, p_id_produto, p_quantidade_saida, (v_quantidade_atual - p_quantidade_saida);
+            END;
+            $$;
+        `;
+        console.log("🔧 Procedure 'saida_produto' criada com sucesso!");
+    } catch (error) {
+        console.error("❌ Erro ao criar procedure saida_produto:", error);
+    }
+}
 
 // Executar a criação das procedures
 createProcedures();
-//teste

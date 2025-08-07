@@ -23,16 +23,18 @@ async function createTriggerRegistrarAdicaoProduto() {
                     id_produtos, 
                     id_fornecedores, 
                     data_registro, 
-                    quantidade
+                    quantidade,
+                    tipo_movimentacao
                 )
                 VALUES (
                     NEW.id,
                     NEW.id_fornecedor,
                     CURRENT_TIMESTAMP,
-                    NEW.quantidade_estoque
+                    NEW.quantidade_estoque,
+                    'ENTRADA'
                 );
                 
-                RAISE NOTICE 'Registro INSERT criado: Produto ID % (%) - Fornecedor ID % - Quantidade: %', 
+                RAISE NOTICE 'Registro INSERT criado: Produto ID % (%) - Fornecedor ID % - Quantidade: % - Tipo: ENTRADA', 
                             NEW.id, NEW.nome, NEW.id_fornecedor, NEW.quantidade_estoque;
                 
                 RETURN NEW;
@@ -68,27 +70,38 @@ async function createTriggerRegistrarAtualizacaoProduto() {
             AS $$
             DECLARE
                 quantidade_diferenca INTEGER;
+                tipo_movimento VARCHAR(7);
             BEGIN
                 -- Só registra se a quantidade foi alterada
                 IF OLD.quantidade_estoque != NEW.quantidade_estoque THEN
                     quantidade_diferenca := NEW.quantidade_estoque - OLD.quantidade_estoque;
+                    
+                    -- Determinar o tipo de movimentação
+                    IF quantidade_diferenca > 0 THEN
+                        tipo_movimento := 'ENTRADA';
+                    ELSE
+                        tipo_movimento := 'SAIDA';
+                        quantidade_diferenca := ABS(quantidade_diferenca);  -- Converter para positivo
+                    END IF;
                     
                     -- Inserir registro da atualização
                     INSERT INTO registros (
                         id_produtos, 
                         id_fornecedores, 
                         data_registro, 
-                        quantidade
+                        quantidade,
+                        tipo_movimentacao
                     )
                     VALUES (
                         NEW.id,
                         NEW.id_fornecedor,
                         CURRENT_TIMESTAMP,
-                        quantidade_diferenca  -- Registra apenas a diferença (pode ser + ou -)
+                        quantidade_diferenca,
+                        tipo_movimento
                     );
                     
-                    RAISE NOTICE 'Registro UPDATE criado: Produto ID % (%) - Fornecedor ID % - Quantidade alterada: % (de % para %)', 
-                                NEW.id, NEW.nome, NEW.id_fornecedor, quantidade_diferenca, OLD.quantidade_estoque, NEW.quantidade_estoque;
+                    RAISE NOTICE 'Registro UPDATE criado: Produto ID % (%) - Fornecedor ID % - Tipo: % - Quantidade: % (de % para %)', 
+                                NEW.id, NEW.nome, NEW.id_fornecedor, tipo_movimento, quantidade_diferenca, OLD.quantidade_estoque, NEW.quantidade_estoque;
                 END IF;
                 
                 RETURN NEW;

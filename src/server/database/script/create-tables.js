@@ -49,7 +49,8 @@ async function createTableRegistros() {
                 id_produtos INTEGER NOT NULL REFERENCES produtos(id),
                 id_fornecedores INTEGER NOT NULL REFERENCES fornecedores(id),
                 data_registro TIMESTAMP NOT NULL,
-                quantidade INTEGER NOT NULL
+                quantidade INTEGER NOT NULL,
+                tipo_movimentacao VARCHAR(7) NOT NULL CHECK (tipo_movimentacao IN ('ENTRADA', 'SAIDA'))
             );`;
         console.log("📋 Tabela de registros criada.");
     } catch (error) {

@@ -5,11 +5,11 @@ import { adicionarFornecedor } from './controllers/fornecedores.controllers.js'
 const { PORT } = process.env
 const app = fastify()
 
-app.get("/usuario", () => {
+app.get("/fornecedor", () => {
     // usuariosDB.create()
 })
 
-app.post("/usuario", async (request, reply) => {
+app.post("/fornecedor/adicionar", async (request, reply) => {
 
     const usuario = request.body
     console.log(usuario);

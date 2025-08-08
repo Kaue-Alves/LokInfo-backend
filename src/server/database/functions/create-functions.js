@@ -96,7 +96,8 @@ async function createFunctionListarRegistros() {
                 produto_nome TEXT,
                 fornecedor_nome TEXT,
                 fornecedor_cnpj VARCHAR(14),
-                quantidade INTEGER
+                quantidade INTEGER, 
+                tipo_movimentacao VARCHAR
             )
             LANGUAGE plpgsql
             AS $$
@@ -108,7 +109,8 @@ async function createFunctionListarRegistros() {
                     p.nome as produto_nome,
                     f.nome as fornecedor_nome,
                     f.cnpj as fornecedor_cnpj,
-                    r.quantidade
+                    r.quantidade,
+                    r.tipo_movimentacao
                 FROM registros r
                 INNER JOIN produtos p ON r.id_produtos = p.id
                 INNER JOIN fornecedores f ON r.id_fornecedores = f.id

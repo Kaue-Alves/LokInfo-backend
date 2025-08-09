@@ -1,59 +1,108 @@
-import 'dotenv/config'
-import { fastify } from "fastify"
-import { adicionarFornecedor, atualizarFornecedor, listarFornecedores, removerFornecedor } from './controllers/fornecedores.controllers.js'
-import { listarProdutos } from './controllers/produtos.controllers.js'
+import {
+    listarRegistros,
+    resumoEstoque,
+} from "./controllers/registros.controller.js";
+// ==================== ROTAS REGISTROS ====================
+app.get("/registros", async () => {
+    const result = await listarRegistros();
+    return result.data;
+});
 
-const { PORT } = process.env
-const app = fastify()
+app.get("/registros/resumo", async () => {
+    const result = await resumoEstoque();
+    return result.data;
+});
+import "dotenv/config";
+import { fastify } from "fastify";
+import {
+    adicionarFornecedor,
+    atualizarFornecedor,
+    listarFornecedores,
+    removerFornecedor,
+} from "./controllers/fornecedores.controllers.js";
+import {
+    listarProdutos,
+    adicionarProduto,
+    atualizarProduto,
+    removerProduto,
+    saidaProduto,
+} from "./controllers/produtos.controllers.js";
 
+const { PORT } = process.env;
+const app = fastify();
+
+// ==================== ROTAS FORNECEDORES ====================
 app.get("/fornecedores", async () => {
-    
-    const result = await listarFornecedores()
-    
-    return result.data
-})
+    const result = await listarFornecedores();
+    return result.data;
+});
 
 app.post("/fornecedores/adicionar", async (request, reply) => {
+    const fornecedor = request.body;
+    await adicionarFornecedor(fornecedor);
+    return reply
+        .status(201)
+        .send({ message: "Fornecedor adicionado com sucesso!" });
+});
 
-    // {
-    //     "nome": "kaue",
-    //     "cnpj": "12345678901234",
-    //     "telefone": "1234567890",
-    //     "email": "
-    // }
-
-    const fornecedor = request.body
-    
-    await adicionarFornecedor(fornecedor)
-    return reply.status(201).send({message: "Fornecedor adicionado com sucesso!"})
-})
-
-app.put("/fornecedores/atualizar/:id", async (request, reply) => { 
-    const { id } = request.params
-    
-    const fornecedor = request.body
-
-    await atualizarFornecedor(id, fornecedor)
-
-    return reply.status(200).send({ message: `Fornecedor com ID ${id} atualizado com sucesso!` })
-})
+app.put("/fornecedores/atualizar/:id", async (request, reply) => {
+    const { id } = request.params;
+    const fornecedor = request.body;
+    await atualizarFornecedor(id, fornecedor);
+    return reply
+        .status(200)
+        .send({ message: `Fornecedor com ID ${id} atualizado com sucesso!` });
+});
 
 app.delete("/fornecedores/remover/:id", async (request, reply) => {
-    const { id } = request.params
+    const { id } = request.params;
+    await removerFornecedor(id);
+    return reply
+        .status(200)
+        .send({ message: `Fornecedor com ID ${id} removido com sucesso!` });
+});
 
-    await removerFornecedor(id)
-
-    return reply.status(200).send({
-        message: `Fornecedor com ID ${id} removido com sucesso!`
-    })
-})
-
+// ==================== ROTAS PRODUTOS ====================
 app.get("/produtos", async () => {
-    const result = await listarProdutos()
-    
-    return result.data
-})
+    const result = await listarProdutos();
+    return result.data;
+});
 
+app.post("/produtos/saida/:id", async (request, reply) => {
+    const { id } = request.params;
+    const { quantidade_saida } = request.body;
+    await saidaProduto(id, quantidade_saida);
+    return reply.status(200).send({
+        message: `Saída de ${quantidade_saida} unidade(s) do produto ${id} registrada com sucesso!`,
+    });
+});
+
+app.post("/produtos/adicionar", async (request, reply) => {
+    const produto = request.body;
+    await adicionarProduto(produto);
+    return reply
+        .status(201)
+        .send({ message: "Produto adicionado com sucesso!" });
+});
+
+app.put("/produtos/atualizar/:id", async (request, reply) => {
+    const { id } = request.params;
+    const produto = request.body;
+    await atualizarProduto(id, produto);
+    return reply
+        .status(200)
+        .send({ message: `Produto com ID ${id} atualizado com sucesso!` });
+});
+
+app.delete("/produtos/remover/:id", async (request, reply) => {
+    const { id } = request.params;
+    await removerProduto(id);
+    return reply
+        .status(200)
+        .send({ message: `Produto com ID ${id} removido com sucesso!` });
+});
+
+// ==================== INICIAR SERVIDOR ====================
 app.listen({
-    port: PORT || 3333
-})
+    port: PORT || 3333,
+});

@@ -42,25 +42,14 @@ export class Produtos {
         }
     }
 
-    async getRegistros() {
+    async saida(id, quantidade_saida) {
         try {
-            const result = await sql`SELECT * FROM listar_registros()`;
-            console.log("📝 Registros encontrados:", result.length);
-            return result;
+            await sql`CALL saida_produto(${id}, ${quantidade_saida})`;
+            console.log(`✅ Saída de produto registrada: Produto ${id}, Quantidade ${quantidade_saida}`);
         } catch (error) {
-            console.error("❌ Erro ao buscar registros:", error);
+            console.error("❌ Erro ao registrar saída de produto:", error);
             throw error;
         }
     }
 
-    async getResumoEstoque() {
-        try {
-            const result = await sql`SELECT * FROM resumo_estoque()`;
-            console.log("💰 Resumo do estoque:", result[0]);
-            return result[0];
-        } catch (error) {
-            console.error("❌ Erro ao buscar resumo do estoque:", error);
-            throw error;
-        }
-    }
 }

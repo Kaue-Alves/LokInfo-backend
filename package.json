@@ -16,6 +16,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/server/index.js",
     "dev": "node --watch ./src/server/index.js",
     "reset-database": "node ./src/server/database/script/create-tables.js",
     "create-procedures": "node ./src/server/database/procedures/create-procedures.js",

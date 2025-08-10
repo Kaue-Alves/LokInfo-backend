@@ -19,7 +19,7 @@ import {
     saidaProduto,
 } from "./controllers/produtos.controllers.js";
 
-const { PORT } = process.env;
+// const { PORT } = process.env;
 const app = fastify();
 await app.register(cors, {
     origin: true 

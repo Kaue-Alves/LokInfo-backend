@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { fastify } from "fastify";
+import cors from '@fastify/cors';
 import {
     listarRegistros,
     resumoEstoque,
@@ -20,6 +21,9 @@ import {
 
 const { PORT } = process.env;
 const app = fastify();
+await app.register(cors, {
+    origin: true 
+});
 
 // ==================== ROTAS REGISTROS ====================
 app.get("/registros", async () => {
@@ -93,5 +97,5 @@ app.post("/produtos/saida/:id", async (request, reply) => {
 
 // ==================== INICIAR SERVIDOR ====================
 app.listen({
-    port: PORT || 3333,
+    port: process.env.PORT ?? 3334,
 });

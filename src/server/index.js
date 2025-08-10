@@ -98,4 +98,7 @@ app.post("/produtos/saida/:id", async (request, reply) => {
 // ==================== INICIAR SERVIDOR ====================
 app.listen({
     port: process.env.PORT ?? 3334,
+    host: '0.0.0.0'
+}).then(() => {
+    console.log(`Servidor rodando na porta ${process.env.PORT ?? 3334}`);
 });

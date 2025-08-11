@@ -19,10 +19,19 @@ import {
     saidaProduto,
 } from "./controllers/produtos.controllers.js";
 
-// const { PORT } = process.env;
 const app = fastify();
-await app.register(cors, {
-    origin: true 
+
+app.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
+
+app.listen({
+    port: process.env.PORT ?? 3334,
+    host: '0.0.0.0'
+}).then(() => {
+    console.log(`Servidor rodando na porta ${process.env.PORT ?? 3334}`);
 });
 
 // ==================== ROTAS REGISTROS ====================
@@ -93,12 +102,4 @@ app.post("/produtos/saida/:id", async (request, reply) => {
     return reply.status(200).send({
         message: `Saída de ${quantidade_saida} unidade(s) do produto ${id} registrada com sucesso!`,
     });
-});
-
-// ==================== INICIAR SERVIDOR ====================
-app.listen({
-    port: process.env.PORT ?? 3334,
-    host: '0.0.0.0'
-}).then(() => {
-    console.log(`Servidor rodando na porta ${process.env.PORT ?? 3334}`);
 });

@@ -203,15 +203,25 @@ async function createProcedureRemoverProduto() {
             CREATE OR REPLACE PROCEDURE remover_produto(p_id INTEGER)
             LANGUAGE plpgsql
             AS $$
+            DECLARE
+                v_total_registros INTEGER;
             BEGIN
-                DELETE FROM produtos
-                WHERE id = p_id;
+                -- Remover registros relacionados ao produto
+                SELECT COUNT(*) INTO v_total_registros FROM registros WHERE id_produtos = p_id;
+                IF v_total_registros > 0 THEN
+                    DELETE FROM registros WHERE id_produtos = p_id;
+                    RAISE NOTICE 'Removidos % registros relacionados ao produto %.', v_total_registros, p_id;
+                END IF;
 
+                -- Remover o produto
+                DELETE FROM produtos WHERE id = p_id;
                 RAISE NOTICE 'Produto com ID % removido.', p_id;
             END;
             $$;
         `;
-        console.log("🔧 Procedure 'remover_produto' criada com sucesso!");
+        console.log(
+            "🔧 Procedure 'remover_produto' criada com remoção em cascata!"
+        );
     } catch (error) {
         console.error("❌ Erro ao criar procedure remover_produto:", error);
     }

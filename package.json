@@ -16,10 +16,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/server/index.js",
     "dev": "node --watch ./src/server/index.js",
-    "reset-database": "node ./src/server/database/script/create-tables.js"
+    "reset-database": "node ./src/server/database/script/create-tables.js",
+    "create-procedures": "node ./src/server/database/procedures/create-procedures.js",
+    "create-functions": "node ./src/server/database/functions/create-functions.js",
+    "create-triggers": "node ./src/server/database/triggers/create-triggers.js"
   },
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
     "dotenv": "^17.2.1",
     "fastify": "^5.4.0",
     "postgres": "^3.4.7"

@@ -1,8 +1,6 @@
 import { sql } from "../config/db.js";
 import { resetDatabase } from "./reset-database.js";
 
-createTables();
-
 export async function createTables() {
     await resetDatabase();
 
@@ -21,7 +19,7 @@ async function createTableProdutos() {
                 quantidade_estoque INTEGER NOT NULL,
                 id_fornecedor INTEGER NOT NULL REFERENCES fornecedores(id)
             );`;
-        console.log("� Tabela de produtos criada.");
+        console.log("📦 Tabela de produtos criada.");
     } catch (error) {
         console.error("❌ Erro ao criar tabela produtos:", error);
     }
@@ -33,11 +31,11 @@ async function createTableFornecedores() {
             CREATE TABLE fornecedores (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL,
-                cnpj TEXT NOT NULL UNIQUE,
-                telefone TEXT NOT NULL,
+                cnpj VARCHAR(14) NOT NULL UNIQUE,
+                telefone VARCHAR(15) NOT NULL,
                 email TEXT NOT NULL
             );`;
-        console.log("� Tabela de fornecedores criada.");
+        console.log("🏭 Tabela de fornecedores criada.");
     } catch (error) {
         console.error("❌ Erro ao criar tabela fornecedores:", error);
     }
@@ -50,10 +48,14 @@ async function createTableRegistros() {
                 id SERIAL PRIMARY KEY,
                 id_produtos INTEGER NOT NULL REFERENCES produtos(id),
                 id_fornecedores INTEGER NOT NULL REFERENCES fornecedores(id),
-                data_registro DATE NOT NULL
+                data_registro TIMESTAMP NOT NULL,
+                quantidade INTEGER NOT NULL,
+                tipo_movimentacao VARCHAR(7) NOT NULL CHECK (tipo_movimentacao IN ('ENTRADA', 'SAIDA'))
             );`;
         console.log("📋 Tabela de registros criada.");
     } catch (error) {
         console.error("❌ Erro ao criar tabela registros:", error);
     }
 }
+
+createTables();
